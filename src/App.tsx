@@ -11,10 +11,21 @@ function App() {
 	}, [dataUsers]);
 
 	const [withColor, setWithColor] = useState(false);
+	const [sortByCountry, setSortByCountry] = useState(false);
 
 	const handleColor = () => {
 		setWithColor(!withColor);
 	};
+
+	const handleSortByCountry = () => {
+		setSortByCountry((prevState) => !prevState);
+	};
+
+	const sortedUsers = sortByCountry //Recuerda que sort modifica el array original
+		? [...usersData].sort((a, b) => a.location.country.localeCompare(b.location.country))
+		: usersData;
+
+	console.log(sortedUsers);
 
 	console.log('Renderizando App'); // Esto se imprime cada vez que el componente se renderiza
 
@@ -27,7 +38,7 @@ function App() {
 					</div>
 					<div className='actions'>
 						<button onClick={handleColor}>Row Colors</button>
-						<button>Sort by country </button>
+						<button onClick={handleSortByCountry}>{sortByCountry ? 'Not Sort by country' : 'Sort by country'}</button>
 						<button>Restore State</button>
 						<input
 							type='text'
@@ -38,7 +49,7 @@ function App() {
 				<main>
 					{usersData.length > 0 ? (
 						<UserList
-							usersData={usersData}
+							usersData={sortedUsers}
 							withColor={withColor}
 						/>
 					) : (
