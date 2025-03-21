@@ -6,7 +6,7 @@ import { UserList } from './components/UserList';
 function App() {
 	const { dataUsers, renewUsers, originalUsers } = useUsersData();
 	const usersData = useMemo(() => {
-		console.log('Recalculando usersData'); // Esto se imprime solo si dataUsers cambia
+		// console.log('Recalculando usersData'); // Esto se imprime solo si dataUsers cambia
 		return dataUsers;
 	}, [dataUsers]);
 
@@ -30,6 +30,7 @@ function App() {
 			: usersData;
 
 	const sortedUsers = useMemo(() => {
+		// console.log('sortedUsers');
 		if (sortUsers === 'country') {
 			return filteredUsers.slice().sort((a, b) => a.location.country.localeCompare(b.location.country));
 		} else if (sortUsers === 'lastname') {
@@ -42,7 +43,7 @@ function App() {
 	}, [filteredUsers, sortUsers]);
 
 	const handleDeleteRow = (_uuid: string) => {
-		console.log('Delete row with uuid:', _uuid);
+		// console.log('Delete row with uuid:', _uuid);
 		const sortedUsers = usersData.filter((user) => user.login.uuid !== _uuid);
 		renewUsers(sortedUsers);
 	};
@@ -51,7 +52,7 @@ function App() {
 		renewUsers(originalUsers.current);
 	};
 
-	console.log('Renderizando App'); // Esto se imprime cada vez que el componente se renderiza
+	// console.log('Renderizando App'); // Esto se imprime cada vez que el componente se renderiza
 
 	return (
 		<>
