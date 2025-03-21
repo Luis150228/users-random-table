@@ -12,6 +12,7 @@ function App() {
 
 	const [withColor, setWithColor] = useState(false);
 	const [sortUsers, setSortUsers] = useState<string>('none');
+	const [filterInput, setFilterInput] = useState<string | null>(null);
 
 	const handleColor = () => {
 		setWithColor(!withColor);
@@ -23,17 +24,22 @@ function App() {
 		if (sort !== undefined) setSortUsers((prevSortType) => (prevSortType === sort ? 'none' : sort));
 	};
 
+	const filteredUsers =
+		filterInput !== null
+			? usersData.filter((user) => user.location.country.toLowerCase().includes(filterInput.toLowerCase()))
+			: usersData;
+
 	const sortedUsers = useMemo(() => {
 		if (sortUsers === 'country') {
-			return usersData.slice().sort((a, b) => a.location.country.localeCompare(b.location.country));
+			return filteredUsers.slice().sort((a, b) => a.location.country.localeCompare(b.location.country));
 		} else if (sortUsers === 'lastname') {
-			return usersData.slice().sort((a, b) => a.name.last.localeCompare(b.name.last));
+			return filteredUsers.slice().sort((a, b) => a.name.last.localeCompare(b.name.last));
 		} else if (sortUsers === 'name') {
-			return usersData.slice().sort((a, b) => a.name.first.localeCompare(b.name.first));
+			return filteredUsers.slice().sort((a, b) => a.name.first.localeCompare(b.name.first));
 		} else {
-			return usersData; // Sin ordenamiento
+			return filteredUsers; // Sin ordenamiento
 		}
-	}, [usersData, sortUsers]);
+	}, [filteredUsers, sortUsers]);
 
 	const handleDeleteRow = (_uuid: string) => {
 		console.log('Delete row with uuid:', _uuid);
@@ -63,6 +69,7 @@ function App() {
 						</button>
 						<button onClick={handleRestoreState}>Restore State</button>
 						<input
+							onChange={(e) => setFilterInput(e.target.value)}
 							type='text'
 							placeholder='Filter by country'
 						/>
