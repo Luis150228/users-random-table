@@ -22,7 +22,7 @@ function App() {
 	};
 
 	const sortedUsers = sortByCountry //Recuerda que sort modifica el array original
-		? usersData.toSorted((a, b) => a.location.country.localeCompare(b.location.country))
+		? usersData.slice().sort((a, b) => a.location.country.localeCompare(b.location.country))
 		: usersData;
 
 	console.log(sortedUsers);
