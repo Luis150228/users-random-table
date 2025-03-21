@@ -4,6 +4,10 @@ import { Result } from "../usersType.d";
 
 export const useUsersData = () => {
     const [dataUsers, setDataUsers] = useState<Result[]>([]);// el donde y el como se va a guardar la data
+
+    const renewUsers = (data: Result[]) => {
+        setDataUsers(data);
+    }
         useEffect(() => {// el cuando se va a ejecutar
             const fetchData = async () => {
                 try {
@@ -16,5 +20,5 @@ export const useUsersData = () => {
             fetchData();
         }, []);// el como se va a ejecutar en este caso solo una vez[]
         // console.log(dataUsers);
-    return { dataUsers, setDataUsers };
+    return { dataUsers, renewUsers };
 };

@@ -1,10 +1,11 @@
 import { Result } from '../usersType.d';
 interface UserListProps {
 	withColor?: boolean;
+	deleteRow: (_uuid: string) => void;
 	usersData: Result[];
 }
 
-export const UserList = ({ withColor, usersData }: UserListProps) => {
+export const UserList = ({ withColor, deleteRow, usersData }: UserListProps) => {
 	return (
 		<table className='users-table'>
 			<thead>
@@ -32,7 +33,7 @@ export const UserList = ({ withColor, usersData }: UserListProps) => {
 						<td>{user.name.last}</td>
 						<td>{user.location.country}</td>
 						<td>
-							<button>Delete</button>
+							<button onClick={() => deleteRow(user.login.uuid)}>Delete</button>
 						</td>
 					</tr>
 				))}

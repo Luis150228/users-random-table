@@ -4,7 +4,7 @@ import { useUsersData } from './hook/useUsersData';
 import { UserList } from './components/UserList';
 
 function App() {
-	const { dataUsers } = useUsersData();
+	const { dataUsers, renewUsers } = useUsersData();
 	const usersData = useMemo(() => {
 		console.log('Recalculando usersData'); // Esto se imprime solo si dataUsers cambia
 		return dataUsers;
@@ -25,7 +25,11 @@ function App() {
 		? usersData.slice().sort((a, b) => a.location.country.localeCompare(b.location.country))
 		: usersData;
 
-	console.log(sortedUsers);
+	const handleDeleteRow = (_uuid: string) => {
+		console.log('Delete row with uuid:', _uuid);
+		const sortedUsers = usersData.filter((user) => user.login.uuid !== _uuid);
+		renewUsers(sortedUsers);
+	};
 
 	console.log('Renderizando App'); // Esto se imprime cada vez que el componente se renderiza
 
@@ -49,6 +53,7 @@ function App() {
 				<main>
 					{usersData.length > 0 ? (
 						<UserList
+							deleteRow={handleDeleteRow}
 							usersData={sortedUsers}
 							withColor={withColor}
 						/>
