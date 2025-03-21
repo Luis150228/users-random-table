@@ -4,7 +4,7 @@ import { useUsersData } from './hook/useUsersData';
 import { UserList } from './components/UserList';
 
 function App() {
-	const { dataUsers, renewUsers } = useUsersData();
+	const { dataUsers, renewUsers, originalUsers } = useUsersData();
 	const usersData = useMemo(() => {
 		console.log('Recalculando usersData'); // Esto se imprime solo si dataUsers cambia
 		return dataUsers;
@@ -31,6 +31,10 @@ function App() {
 		renewUsers(sortedUsers);
 	};
 
+	const handleRestoreState = () => {
+		renewUsers(originalUsers.current);
+	};
+
 	console.log('Renderizando App'); // Esto se imprime cada vez que el componente se renderiza
 
 	return (
@@ -43,7 +47,7 @@ function App() {
 					<div className='actions'>
 						<button onClick={handleColor}>Row Colors</button>
 						<button onClick={handleSortByCountry}>{sortByCountry ? 'Not Sort by country' : 'Sort by country'}</button>
-						<button>Restore State</button>
+						<button onClick={handleRestoreState}>Restore State</button>
 						<input
 							type='text'
 							placeholder='Filter by country'

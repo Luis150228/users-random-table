@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usersData } from "../assets/store/users";
 import { Result } from "../usersType.d";
 
 export const useUsersData = () => {
     const [dataUsers, setDataUsers] = useState<Result[]>([]);// el donde y el como se va a guardar la data
+
+    const originalUsers = useRef<Result[]>([]);//Declaramos la variable que tendra el estado inicial de Origen sin mutaciones
 
     const renewUsers = (data: Result[]) => {
         setDataUsers(data);
@@ -13,6 +15,7 @@ export const useUsersData = () => {
                 try {
                     const data = await usersData();
                     setDataUsers(data);
+                    originalUsers.current = data;// se guarda la data original en este caso los usuarios de inicio sin mutaciones
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
@@ -20,5 +23,5 @@ export const useUsersData = () => {
             fetchData();
         }, []);// el como se va a ejecutar en este caso solo una vez[]
         // console.log(dataUsers);
-    return { dataUsers, renewUsers };
+    return { dataUsers, renewUsers, originalUsers };
 };
