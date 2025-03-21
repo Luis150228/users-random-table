@@ -35,7 +35,16 @@ function App() {
 						/>
 					</div>
 				</header>
-				<div>{usersData.length > 0 ? <UserList usersData={usersData} /> : <p>Loading...</p>}</div>
+				<main>
+					{usersData.length > 0 ? (
+						<UserList
+							usersData={usersData}
+							withColor={withColor}
+						/>
+					) : (
+						<p>Loading...</p>
+					)}
+				</main>
 			</section>
 		</>
 	);

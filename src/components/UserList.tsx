@@ -1,9 +1,10 @@
 import { Result } from '../usersType.d';
 interface UserListProps {
+	withColor?: boolean;
 	usersData: Result[];
 }
 
-export const UserList = ({ usersData }: UserListProps) => {
+export const UserList = ({ withColor, usersData }: UserListProps) => {
 	return (
 		<table className='users-table'>
 			<thead>
@@ -19,8 +20,7 @@ export const UserList = ({ usersData }: UserListProps) => {
 				{usersData.map((user) => (
 					<tr
 						key={user.login.uuid}
-						// className={withColor ? 'color-row' : ''}
-					>
+						className={withColor ? 'color-row' : ''}>
 						<td>
 							<img
 								className='user-image'
