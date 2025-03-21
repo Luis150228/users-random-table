@@ -3,17 +3,33 @@ interface UserListProps {
 	withColor?: boolean;
 	deleteRow: (_uuid: string) => void;
 	usersData: Result[];
+	sortListUsers: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const UserList = ({ withColor, deleteRow, usersData }: UserListProps) => {
+export const UserList = ({ withColor, deleteRow, usersData, sortListUsers }: UserListProps) => {
 	return (
 		<table className='users-table'>
 			<thead>
 				<tr>
 					<th>Picture</th>
-					<th>Name</th>
-					<th>LastName</th>
-					<th>Country</th>
+					<th
+						className='sort-control'
+						data-sort={'name'}
+						onClick={sortListUsers}>
+						Name
+					</th>
+					<th
+						className='sort-control'
+						data-sort={'lastname'}
+						onClick={sortListUsers}>
+						LastName
+					</th>
+					<th
+						className='sort-control'
+						data-sort={'country'}
+						onClick={sortListUsers}>
+						Country
+					</th>
 					<th>Actions</th>
 				</tr>
 			</thead>

@@ -11,19 +11,29 @@ function App() {
 	}, [dataUsers]);
 
 	const [withColor, setWithColor] = useState(false);
-	const [sortByCountry, setSortByCountry] = useState(false);
+	const [sortUsers, setSortUsers] = useState<string>('none');
 
 	const handleColor = () => {
 		setWithColor(!withColor);
 	};
 
-	const handleSortByCountry = () => {
-		setSortByCountry((prevState) => !prevState);
+	const handleSortBy = (e: React.MouseEvent<HTMLElement>) => {
+		const { sort } = e.currentTarget.dataset;
+		// console.log(sort);
+		if (sort !== undefined) setSortUsers((prevSortType) => (prevSortType === sort ? 'none' : sort));
 	};
 
-	const sortedUsers = sortByCountry //Recuerda que sort modifica el array original
-		? usersData.slice().sort((a, b) => a.location.country.localeCompare(b.location.country))
-		: usersData;
+	const sortedUsers = useMemo(() => {
+		if (sortUsers === 'country') {
+			return usersData.slice().sort((a, b) => a.location.country.localeCompare(b.location.country));
+		} else if (sortUsers === 'lastname') {
+			return usersData.slice().sort((a, b) => a.name.last.localeCompare(b.name.last));
+		} else if (sortUsers === 'name') {
+			return usersData.slice().sort((a, b) => a.name.first.localeCompare(b.name.first));
+		} else {
+			return usersData; // Sin ordenamiento
+		}
+	}, [usersData, sortUsers]);
 
 	const handleDeleteRow = (_uuid: string) => {
 		console.log('Delete row with uuid:', _uuid);
@@ -46,7 +56,11 @@ function App() {
 					</div>
 					<div className='actions'>
 						<button onClick={handleColor}>Row Colors</button>
-						<button onClick={handleSortByCountry}>{sortByCountry ? 'Not Sort by country' : 'Sort by country'}</button>
+						<button
+							onClick={handleSortBy}
+							data-sort={'country'}>
+							{sortUsers === 'country' ? 'Not Sort by country' : 'Sort by country'}
+						</button>
 						<button onClick={handleRestoreState}>Restore State</button>
 						<input
 							type='text'
@@ -57,6 +71,7 @@ function App() {
 				<main>
 					{usersData.length > 0 ? (
 						<UserList
+							sortListUsers={handleSortBy}
 							deleteRow={handleDeleteRow}
 							usersData={sortedUsers}
 							withColor={withColor}
