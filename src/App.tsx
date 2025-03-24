@@ -4,7 +4,7 @@ import { useUsersData } from './hook/useUsersData';
 import { UserList } from './components/UserList';
 
 function App() {
-	const { dataUsers, renewUsers, originalUsers } = useUsersData();
+	const { dataUsers, renewUsers, originalUsers, loading, addPage, error } = useUsersData();
 	const usersData = useMemo(() => {
 		// console.log('Recalculando usersData'); // Esto se imprime solo si dataUsers cambia
 		return dataUsers;
@@ -24,10 +24,20 @@ function App() {
 		if (sort !== undefined) setSortUsers((prevSortType) => (prevSortType === sort ? 'none' : sort));
 	};
 
+	const handlePage = () => {
+		addPage();
+	};
+
 	const filteredUsers =
 		filterInput !== null
 			? usersData.filter((user) => user.location.country.toLowerCase().includes(filterInput.toLowerCase()))
 			: usersData;
+
+	const handleDeleteRow = (_uuid: string) => {
+		// console.log('Delete row with uuid:', _uuid);
+		const sortedUsers = usersData.filter((user) => user.login.uuid !== _uuid);
+		renewUsers(sortedUsers);
+	};
 
 	const sortedUsers = useMemo(() => {
 		// console.log('sortedUsers');
@@ -41,12 +51,6 @@ function App() {
 			return filteredUsers; // Sin ordenamiento
 		}
 	}, [filteredUsers, sortUsers]);
-
-	const handleDeleteRow = (_uuid: string) => {
-		// console.log('Delete row with uuid:', _uuid);
-		const sortedUsers = usersData.filter((user) => user.login.uuid !== _uuid);
-		renewUsers(sortedUsers);
-	};
 
 	const handleRestoreState = () => {
 		renewUsers(originalUsers.current);
@@ -66,7 +70,7 @@ function App() {
 						<button
 							onClick={handleSortBy}
 							data-sort={'country'}>
-							{sortUsers === 'country' ? 'Not Sort by country' : 'Sort by country'}
+							{sortUsers !== 'none' ? `Not Sort by ${sortUsers}` : `Sort by Country`}
 						</button>
 						<button onClick={handleRestoreState}>Restore State</button>
 						<input
@@ -77,16 +81,29 @@ function App() {
 					</div>
 				</header>
 				<main>
-					{usersData.length > 0 ? (
-						<UserList
-							sortListUsers={handleSortBy}
-							deleteRow={handleDeleteRow}
-							usersData={sortedUsers}
-							withColor={withColor}
-						/>
+					{sortedUsers.length > 0 ? (
+						<div className='content-table'>
+							<UserList
+								sortListUsers={handleSortBy}
+								deleteRow={handleDeleteRow}
+								usersData={sortedUsers}
+								withColor={withColor}
+							/>
+						</div>
 					) : (
-						<p>Loading...</p>
+						<h3>Sin Usuarios</h3>
 					)}
+					{loading === false ? (
+						<button
+							className='btn-plus-users'
+							onClick={handlePage}>
+							Show more users
+						</button>
+					) : loading === true && error !== true ? (
+						<h1>...Loading</h1>
+					) : error === true ? (
+						<h1>Error</h1>
+					) : null}
 				</main>
 			</section>
 		</>
