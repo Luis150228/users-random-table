@@ -1,3 +1,5 @@
+# .github/workflows/deploy.yml
+
 name: Deploy React + Vite app to GitHub Pages
 
 on:
@@ -10,14 +12,18 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -25,13 +31,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Vite project
+      - name: Build Vite site
         run: npm run build
 
-      - name: Upload dist folder
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: ./dist
+          path: dist
 
   deploy:
     needs: build
