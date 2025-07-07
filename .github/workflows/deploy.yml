@@ -1,6 +1,4 @@
-# .github/workflows/deploy.yml
-
-name: Deploy React + Vite to GitHub Pages (modern)
+name: Deploy React + Vite to GitHub Pages
 
 on:
   push:
@@ -8,9 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
+  contents: read
   pages: write
   id-token: write
-  contents: read
 
 concurrency:
   group: 'pages'
@@ -36,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Upload static site
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3 # ✅ 100% válido hasta 2025+
         with:
           path: ./dist
 
